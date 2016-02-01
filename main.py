@@ -32,7 +32,7 @@ for i in range(0,len(arr1)):
          users[j].state = 'c'
          for k in range(0,len(users[j].childrenID)):
             users[j].childrenID[k] = arr1[i][k+1]
-
+            users[j].childrenID[k] = users[j].childrenID[k].replace(' ', '')
 #I know this is dumb, but it's late at night, and I'm confusing passing users by value or reference in my head, so this is what I'm doing.
 for l in range(0,len(arr2)):
    for m in range(0,len(users)):
@@ -40,6 +40,7 @@ for l in range(0,len(arr2)):
          users[m].state = 'c'
          for n in range(0,len(users[m].childrenID)):
             users[m].childrenID[n] = arr2[l][n+1]
+            users[m].childrenID[n] = users[m].childrenID[n].replace(' ', '')
 
 postcount = 0
 for i in range(len(users)):
@@ -47,6 +48,17 @@ for i in range(len(users)):
       postcount = postcount + 1
 
 credits = (postcount - precount) * 3
+#kill all nonvalid surveys
+if config.allowOnlySuffixes == 1:
+   for i in range(0,len(users)):
+      if config.suffix not in users[i].email:
+         users[i].state == 'd'
+
+#kill expired surveys
+for i in range(len(users)):
+   if (users[i].sendTime + config.expiry) < datetime.now() and users[i].state == 's':
+      users[i].state = 'd'
+      credits = credits + 1
 
 for i in range(0, len(users)):
    if users[i].state == 'c':
@@ -59,6 +71,7 @@ for i in range(0, len(users)):
             if not not users[i].childrenID[j]:
                new = filemanager.User()
                new.email = users[i].childrenID[j]
+               new.email = new.email.replace(' ', '')
                new.parentID = users[i].email
                new.state = 'n'
                users.append(new)
@@ -68,7 +81,12 @@ for i in range(0, len(users)):
 for i in range(0,len(users)):
    if users[i].state == 'q' and datetime.now() > (users[i].selectTime + config.delay):
       surv = helpers.chooseSurvey()
-      quapi.sendSurvey(users[i].email, surv) 
+      subj = ''
+      if users[i].parentID == '':
+         subj = config.subject
+      else:
+         subj = config.subject2 + users[i].parentID
+      quapi.sendSurveySubjectExpiry(users[i].email, surv,subj) 
       users[i].state = 's'
       users[i].timeSent = datetime.now()   
       users[i].survey = surv

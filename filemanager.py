@@ -1,4 +1,5 @@
 import csv
+import config
 from datetime import datetime, timedelta
 
 class User:
@@ -6,7 +7,7 @@ class User:
       self.email = ''
       self.state = 'n'
       self.parentID = ''
-      self.childrenID = ['','','','','']
+      self.childrenID = ['']*len(config.survey1questions)
       self.survey = ''
       self.selectTime = datetime.now() - timedelta(days=100)
       self.sendTime = datetime.now() - timedelta(days = 100)
@@ -34,12 +35,14 @@ def usersToArray(users):
       d[i][0] = users[i].email
       d[i][1] = users[i].state
       d[i][2] = users[i].parentID
+      a = 0
       for j in range(3, 3 + len(users[i].childrenID)):
          d[i][j] = users[i].childrenID[j-3]
-      d[i][8] = users[i].survey
-      d[i][9] = users[i].selectTime.strftime('%Y-%m-%d %H:%M:%S')
-      d[i][10] = users[i].sendTime.strftime('%Y-%m-%d %H:%M:%S')
-      d[i][11] = users[i].returnTime.strftime('%Y-%m-%d %H:%M:%S')
+         a = j + 1
+      d[i][a] = users[i].survey
+      d[i][a+1] = users[i].selectTime.strftime('%Y-%m-%d %H:%M:%S')
+      d[i][a+2] = users[i].sendTime.strftime('%Y-%m-%d %H:%M:%S')
+      d[i][a+3] = users[i].returnTime.strftime('%Y-%m-%d %H:%M:%S')
    return d
 
 def arrayToUsers(arr):
@@ -50,12 +53,13 @@ def arrayToUsers(arr):
       user.email = arr[i][0]
       user.state = arr[i][1]
       user.parentID = arr[i][2]
+      a = len(user.childrenID) + 3
       for j in range(3,len(user.childrenID)):
          user.childrenID[j-3] = arr[i][j]
-      user.survey = arr[i][8]
-      user.selectTime = datetime.strptime(arr[i][9], '%Y-%m-%d %H:%M:%S')
-      user.sendTime = datetime.strptime(arr[i][10], '%Y-%m-%d %H:%M:%S')
-      user.returnTime = datetime.strptime(arr[i][11], '%Y-%m-%d %H:%M:%S')
+      user.survey = arr[i][a]
+      user.selectTime = datetime.strptime(arr[i][a+1], '%Y-%m-%d %H:%M:%S')
+      user.sendTime = datetime.strptime(arr[i][a+2], '%Y-%m-%d %H:%M:%S')
+      user.returnTime = datetime.strptime(arr[i][a+3], '%Y-%m-%d %H:%M:%S')
       users.append(user)
    return users
    
