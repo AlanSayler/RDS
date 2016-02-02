@@ -129,6 +129,9 @@ while credits > 0 and running < config.total:
       users[index].selectTime = datetime.now()
       credits = credits-1
       running = running + 1
+      if running == config.total:
+         print('ran out of coupons at ' + str(datetime.now()))
+         exit()
    dists[index] = 0
    found = 0
    for i in range(0,len(users)):
