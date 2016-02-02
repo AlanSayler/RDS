@@ -8,6 +8,15 @@ import filemanager
 from datetime import datetime, timedelta
 #load config.
 config.init()
+#read old validation file, exit if it's bad
+validation = filemanager.readcsv('validation.txt')
+if validation[0][0] != 'GOOD':
+   print(validation[0][0])
+   print('Something went wrong at' + str(datetime.now()) + ', Stopping')
+   exit()
+
+validation[0][0] = 'BAD'
+filemanager.writecsv(validation,'validation.txt')
 
 #read old csv to get data.
 arr =  filemanager.readcsv(config.filename)
@@ -57,6 +66,7 @@ if config.allowOnlySuffixes == 1:
 #kill expired surveys
 for i in range(len(users)):
    if (users[i].sendTime + config.expiry) < datetime.now() and users[i].state == 's':
+      print(users[i].sendTime + config.expiry)
       users[i].state = 'd'
       credits = credits + 1
 
@@ -82,13 +92,15 @@ for i in range(0,len(users)):
    if users[i].state == 'q' and datetime.now() > (users[i].selectTime + config.delay):
       surv = helpers.chooseSurvey()
       subj = ''
-      if users[i].parentID == '':
+      #change this depending on what zoe wants to do
+      defsubject = 1
+      if users[i].parentID == '' or defsubject == 1:
          subj = config.subject
       else:
          subj = config.subject2 + users[i].parentID
-      quapi.sendSurveySubjectExpiry(users[i].email, surv,subj) 
+      quapi.sendSurveyToIndividualSubjectExpiry(users[i].email, surv,subj) 
       users[i].state = 's'
-      users[i].timeSent = datetime.now()   
+      users[i].sendTime = datetime.now()   
       users[i].survey = surv
 #calculate ave distance of each N to Qs and Ss and Cs
 listofListOfParents = [None] *len(users)
@@ -127,3 +139,6 @@ while credits > 0 and running < config.total:
 #write to csv
 filemanager.writecsv(filemanager.usersToArray(users), config.filename)
 
+
+validation[0][0] = 'GOOD'
+filemanager.writecsv(validation,'validation.txt')

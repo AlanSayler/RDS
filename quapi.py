@@ -42,8 +42,10 @@ def sendSurvey (emailaddress, survey):
     #print(y)
     thestring = str(y.html.body.xml.result.recipientid.string)
     #print(thestring)
+    print(sendSurveyToIndividual(thestring,survey))
     response =  makeRequest(sendSurveyToIndividual(thestring, survey))
     return response
+
 def sendSurveySubjectExpiry (emailaddress, survey, subject):
     xml  = makeRequest(addRecipient(emailaddress))
     y  = BeautifulSoup(xml, "lxml")

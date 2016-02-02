@@ -29,7 +29,7 @@ def readcsv(filename):
 
 def usersToArray(users):
    xran = len(users)
-   yran = 12
+   yran = 7+ len(users[0].childrenID)
    d = [['' for x in range(yran)] for x in range(xran)]
    for i in range (0,xran):
       d[i][0] = users[i].email

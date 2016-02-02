@@ -8,7 +8,9 @@ import pandas as pd
 config.init()
 
 #print(quapi.makeRequest(quapi.addRecipient(config.seedemail)))
-#print(quapi.makeRequest(quapi.sendSurveyToIndividual( 'MLRP_9YO0nUPyUo5vyDj', config.survey2id)))
+print(quapi.sendSurveyToIndividual( 'MLRP_9YO0nUPyUo5vyDj', config.survey2id))
+#print(quapi.makeRequest(quapi.sendSurveyToIndividualSubjectExpiry('MLRP_9YO0nUPyUo5vyDj', config.survey2id, 'poo')))
+#print(quapi.sendSurveySubjectExpiry('madisonsocialnetwork@stat.wisc.edu', config.survey2id, 'subject'))
 #print((quapi.sendSurvey(config.seedemail,config.survey2id)))
 filemanager.writecsv(parsers.parseForEmails(quapi.makeRequest(quapi.getLegacyResponseData(config.survey2id, config.survey2questions)),config.survey2refs), 'somefile.csv')
 
