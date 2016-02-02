@@ -62,6 +62,11 @@ if config.allowOnlySuffixes == 1:
    for i in range(0,len(users)):
       if config.suffix not in users[i].email:
          users[i].state == 'd'
+for i in range(0,len(users)):
+   invalid =  '~`!#$%^&*()_-+={}[]:>;\',</?*-+'
+   for j in users[i].email:
+      if j in invalid:
+         users[i].state = 'd'
 
 #kill expired surveys
 for i in range(len(users)):
