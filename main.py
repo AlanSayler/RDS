@@ -5,21 +5,25 @@ import quapi
 import parsers
 import helpers
 import filemanager
+import os
 from datetime import datetime, timedelta
 #load config.
 config.init()
+curdir = os.path.dirname(__file__)
 #read old validation file, exit if it's bad
-validation = filemanager.readcsv('validation.txt')
+valpath = os.path.join(curdir, 'validation.txt')
+validation = filemanager.readcsv(valpath)
 if validation[0][0] != 'GOOD':
    print(validation[0][0])
    print('Something went wrong at' + str(datetime.now()) + ', Stopping')
    exit()
 
 validation[0][0] = 'BAD'
-filemanager.writecsv(validation,'validation.txt')
+filemanager.writecsv(validation, valpath)
 
 #read old csv to get data.
-arr =  filemanager.readcsv(config.filename)
+csvpath = os.path.join(curdir, config.filename)
+arr =  filemanager.readcsv(csvpath)
 users = filemanager.arrayToUsers(arr)
 precount = 0
 for i in range(0,len(users)):
@@ -145,8 +149,8 @@ while credits > 0 and running < config.total:
    if not found:
       credits = 0
 #write to csv
-filemanager.writecsv(filemanager.usersToArray(users), config.filename)
+filemanager.writecsv(filemanager.usersToArray(users), csvpath)
 
 
 validation[0][0] = 'GOOD'
-filemanager.writecsv(validation,'validation.txt')
+filemanager.writecsv(validation,valpath)
