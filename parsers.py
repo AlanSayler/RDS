@@ -8,13 +8,14 @@ import pandas as pd
 def parseForEmail(xml, quests):
    resp = quests
    y = BeautifulSoup(xml,"lxml")
-   for i in range (0,5):
+   for i in range (0,len(len(quests))):
       quests[i] = 'q' + quests[i]
       resp[i] = (y.find(quests[i]).string)
    return resp
 
 #pass questreferences
 def parseForEmails(xml, quests):
+   print(xml)
    y = BeautifulSoup(xml,"lxml")
    addresses = y.findAll('emailaddress')
    xran = len(addresses)

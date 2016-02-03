@@ -33,8 +33,11 @@ def getLegacyResponseDataOfIndividual (recipientID, surveyID, quests):
     return url
 
 def getLegacyResponseData (surveyID, quests):
-     url = config.basicurl + 'getLegacyResponseData' + config.midurl + '&SurveyID=' + surveyID + '&Questions=QID' + quests[0] + '%2CQID' + quests[1] + '%2CQID' + quests[2] + '%2CQID' + quests[3] + '%2CQID' + quests[4] 
-     return url
+    q = quests[0]
+    for i in range(1,len(quests)):
+        q = q + '%2CQID' + quests[i]
+    url = config.basicurl + 'getLegacyResponseData' + config.midurl + '&SurveyID=' + surveyID + '&Questions=QID' + q 
+    return url
 
 def sendSurvey (emailaddress, survey):
     xml  = makeRequest(addRecipient(emailaddress))
