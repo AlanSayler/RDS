@@ -69,8 +69,9 @@ if config.allowOnlySuffixes == 1:
 for i in range(0,len(users)):
    invalid =  '~`!#$%^&*()_-+={}[]:>;\',</?*-+'
    for j in users[i].email:
-      if j in invalid:
-         users[i].state = 'd'
+      for k in invalid:
+         if j ==k:
+            users[i].state = 'd'
 
 #kill expired surveys
 for i in range(len(users)):
