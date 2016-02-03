@@ -107,7 +107,7 @@ for i in range(0,len(users)):
          subj = config.subject
       else:
          subj = config.subject2 + users[i].parentID
-      quapi.sendSurveyToIndividualSubjectExpiry(users[i].email, surv,subj) 
+      quapi.sendSurveySubjectExpiry(users[i].email, surv) 
       users[i].state = 's'
       users[i].sendTime = datetime.now()   
       users[i].survey = surv
